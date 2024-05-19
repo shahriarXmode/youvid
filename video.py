@@ -15,10 +15,13 @@ def index():
 @app.route('/download', methods=['POST'])
 def download():
     video_url = request.form['url']
-    yt = YouTube(video_url)
-    stream = yt.streams.get_highest_resolution()
-    stream.download(output_path=DOWNLOAD_FOLDER)
-    return redirect(url_for('videos'))
+    try:
+        yt = YouTube(video_url)
+        stream = yt.streams.get_highest_resolution()
+        stream.download(output_path=DOWNLOAD_FOLDER)
+        return redirect(url_for('videos'))
+    except Exception as e:
+        return f"An error occurred: {e}"
 
 @app.route('/videos')
 def videos():
