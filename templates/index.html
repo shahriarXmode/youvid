@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Downloaded Videos</title>
+    <title>YouTube Video Downloader</title>
 </head>
 <body>
-    <h1>Downloaded Videos</h1>
-    <ul>
-        {% for video in videos %}
-            <li>
-                <a href="{{ url_for('video', filename=video) }}">{{ video }}</a>
-            </li>
-        {% endfor %}
-    </ul>
+    <h1>YouTube Video Downloader</h1>
+    <form action="/download" method="post">
+        <label for="url">Enter YouTube Video URL:</label><br>
+        <input type="text" id="url" name="url" required><br><br>
+        <input type="submit" value="Download">
+    </form>
+    <br>
+    <a href="/videos">View Downloaded Videos</a>
 </body>
 </html>
