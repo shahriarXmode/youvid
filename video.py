@@ -15,7 +15,7 @@ def download_youtube_video(url, output_path):
 
 def serve_video():
     PORT = 8000
-    os.chdir("downloads")  # Change working directory to 'downloads'
+    os.chdir("templates")  # Change working directory to 'templates'
 
     Handler = http.server.SimpleHTTPRequestHandler
 
@@ -34,5 +34,6 @@ if __name__ == "__main__":
         serve_video()
     else:
         print("Failed to download video:", filename)
+
 
 
