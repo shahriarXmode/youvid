@@ -116,4 +116,14 @@
         });
 
         video.addEventListener("click", () => {
-   
+            if (video.paused || video.ended) {
+                video.play();
+                playPauseButton.innerHTML = "&#10074;&#10074;";
+            } else {
+                video.pause();
+                playPauseButton.innerHTML = "&#9658;";
+            }
+        });
+    </script>
+</body>
+</html>
