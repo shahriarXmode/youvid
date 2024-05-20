@@ -13,15 +13,15 @@ def download_youtube_video(url, output_path):
     except Exception as e:
         return False, str(e)
 
-def serve_video():
+def serve_video(video_filename):
     PORT = 8000
-    os.chdir("templates")  # Change working directory to 'templates'
+    os.chdir("downloads")  # Change working directory to 'downloads'
 
     Handler = http.server.SimpleHTTPRequestHandler
 
     with socketserver.TCPServer(("", PORT), Handler) as httpd:
-        print(f"Serving video player at http://localhost:{PORT}/index.html")
-        webbrowser.open_new_tab(f"http://localhost:{PORT}/video_player.html")
+        print(f"Serving video at http://localhost:{PORT}")
+        webbrowser.open_new_tab(f"http://localhost:{PORT}/{video_filename}")
         httpd.serve_forever()
 
 if __name__ == "__main__":
@@ -31,10 +31,8 @@ if __name__ == "__main__":
     success, filename = download_youtube_video(url, output_path)
     if success:
         print(f"Video downloaded successfully as '{filename}' in '{output_path}' folder.")
-        serve_video()
+        serve_video(filename)
     else:
-        print("Failed to download video:", filename)
-
         print("Failed to download video:", filename)
 
 
