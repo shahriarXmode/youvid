@@ -20,8 +20,8 @@ def serve_video():
     Handler = http.server.SimpleHTTPRequestHandler
 
     with socketserver.TCPServer(("", PORT), Handler) as httpd:
-        print(f"Serving video player at http://localhost:{PORT}")
-        webbrowser.open_new_tab(f"http://localhost:{PORT}/index.html")
+        print(f"Serving video player at http://localhost:{PORT}/index.html")
+        webbrowser.open_new_tab(f"http://localhost:{PORT}/video_player.html")
         httpd.serve_forever()
 
 if __name__ == "__main__":
@@ -33,6 +33,8 @@ if __name__ == "__main__":
         print(f"Video downloaded successfully as '{filename}' in '{output_path}' folder.")
         serve_video()
     else:
+        print("Failed to download video:", filename)
+
         print("Failed to download video:", filename)
 
 
