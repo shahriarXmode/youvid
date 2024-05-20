@@ -2,6 +2,7 @@ from pytube import YouTube
 import os
 import http.server
 import socketserver
+import base64
 import webbrowser
 
 def download_youtube_video(url, output_path):
@@ -13,10 +14,30 @@ def download_youtube_video(url, output_path):
     except Exception as e:
         return False, str(e)
 
+class AuthHandler(http.server.SimpleHTTPRequestHandler):
+    def do_GET(self):
+        if not self.authenticate():
+            self.send_response(401)
+            self.send_header("WWW-Authenticate", 'Basic realm="Restricted"')
+            self.end_headers()
+            return
+
+        super().do_GET()
+
+    def authenticate(self):
+        auth_header = self.headers.get("Authorization")
+        if auth_header:
+            auth_type, auth_value = auth_header.split(" ", 1)
+            if auth_type.lower() == "basic":
+                decoded_value = base64.b64decode(auth_value).decode("utf-8")
+                username, password = decoded_value.split(":", 1)
+                return username == "username" and password == "password"
+        return False
+
 def serve_video(filename):
     PORT = 8000
 
-    Handler = http.server.SimpleHTTPRequestHandler
+    Handler = AuthHandler
 
     with socketserver.TCPServer(("", PORT), Handler) as httpd:
         print(f"Serving video at http://localhost:{PORT}")
@@ -33,3 +54,4 @@ if __name__ == "__main__":
         serve_video(os.path.join(output_path, filename))
     else:
         print("Failed to download video:", filename)
+
