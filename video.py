@@ -1,37 +1,22 @@
-from flask import Flask, render_template, request, send_from_directory, redirect, url_for
 from pytube import YouTube
 import os
 
-app = Flask(__name__)
-
-DOWNLOAD_FOLDER = "/home/shahriarmahmudoune150/youvid/video"
-if not os.path.exists(DOWNLOAD_FOLDER):
-    os.makedirs(DOWNLOAD_FOLDER)
-
-@app.route('/')
-def index():
-    return render_template('index.html')
-
-@app.route('/download', methods=['POST'])
-def download():
-    video_url = request.form['url']
+def download_youtube_video(url, output_path):
     try:
-        yt = YouTube(video_url)
+        yt = YouTube(url)
         stream = yt.streams.get_highest_resolution()
-        stream.download(output_path=DOWNLOAD_FOLDER)
-        return redirect(url_for('videos'))
+        stream.download(output_path)
+        return True, stream.default_filename
     except Exception as e:
-        return f"An error occurred: {e}"
+        return False, str(e)
 
-@app.route('/videos')
-def videos():
-    video_files = os.listdir(DOWNLOAD_FOLDER)
-    return render_template('videos.html', videos=video_files)
+if __name__ == "__main__":
+    url = input("Enter YouTube video URL: ")
+    output_path = "downloads"
+    os.makedirs(output_path, exist_ok=True)
+    success, filename = download_youtube_video(url, output_path)
+    if success:
+        print(f"Video downloaded successfully as '{filename}' in '{output_path}' folder.")
+    else:
+        print("Failed to download video:", filename)
 
-@app.route('/video/<filename>')
-def video(filename):
-    return send_from_directory(DOWNLOAD_FOLDER, filename)
-
-
-if __name__ == '__main__':
-    app.run(debug=True)
