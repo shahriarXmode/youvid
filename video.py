@@ -21,7 +21,7 @@ def serve_video():
 
     with socketserver.TCPServer(("", PORT), Handler) as httpd:
         print(f"Serving video player at http://localhost:{PORT}")
-        webbrowser.open_new_tab(f"http://localhost:{PORT}/video_player.html")
+        webbrowser.open_new_tab(f"http://localhost:{PORT}/index.html")
         httpd.serve_forever()
 
 if __name__ == "__main__":
